@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:nursery_love_care/Service/auth_service.dart';
+import 'package:nursery_love_care/core/cache/shared_pref_helper.dart';
+import 'package:nursery_love_care/main.dart';
 
 class LoginController extends GetxController {
-  var ShowIcon = true.obs;
-  var IgnoreShowIcon = false.obs;
+  var showIcon = true.obs;
+  var ignoreShowIcon = false.obs;
   var isPasswordVisible = false.obs;
   var phoneController = TextEditingController();
   var passwordController = TextEditingController();
@@ -12,5 +14,46 @@ class LoginController extends GetxController {
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  Future<void> login() async {
+    final email = phoneController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      Get.snackbar('خطأ', 'يرجى إدخال البريد وكلمة المرور');
+      return;
+    }
+
+    isLoading.value = true;
+
+    try {
+      final response = await AuthService.login(email, password);
+
+      await SharedPrefHelper.setData(StorageKeys.token, response.token);
+
+      Get.snackbar('تم بنجاح', response.message);
+
+      Get.offAllNamed('/HomePage');
+    } catch (e) {
+      Get.snackbar('فشل الدخول', 'تأكد من صحة البيانات أو جرب مرة أخرى');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> logout() async {
+    isLoading.value = true;
+    try {
+      await AuthService.logout();
+
+      await SharedPrefHelper.removeData(StorageKeys.token);
+
+      Get.offAllNamed('/login'); 
+    } catch (e) {
+      Get.snackbar('خطأ', 'حدث خطأ أثناء تسجيل الخروج');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

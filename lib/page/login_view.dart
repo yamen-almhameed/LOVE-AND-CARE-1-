@@ -1,15 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:nursery_love_care/Controller/Login_Controller.dart';
-import 'package:nursery_love_care/components/TextField.dart';
+import 'package:nursery_love_care/Controller/login_controller.dart';
+import 'package:nursery_love_care/components/custom_text_field.dart';
 
-class Login extends StatelessWidget {
-  TextEditingController PhoneNumber = TextEditingController();
+class LoginView extends StatelessWidget {
+  final TextEditingController PhoneNumber = TextEditingController();
   final loginController = Get.put(LoginController());
 
-  Login({super.key});
+  LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,7 @@ class Login extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: Image.asset(
-                    'lib/assets/Image/LOVE AND CARE[1]-1 (1) 2.png',
+                    'assets/Image/LOVE AND CARE[1]-1 (1) 2.png',
                     width: 200,
                     height: 200,
                     fit: BoxFit.contain,
@@ -67,7 +65,7 @@ class Login extends StatelessWidget {
                         CustomTextField(
                           hintText: 'رقم الهاتف',
                           controller: loginController.phoneController,
-                          ShowIcon: loginController.IgnoreShowIcon,
+                          ShowIcon: loginController.ignoreShowIcon,
                           visibility: loginController.isPasswordVisible,
                           toggleVisibility:
                               loginController.togglePasswordVisibility,
@@ -75,8 +73,8 @@ class Login extends StatelessWidget {
                         SizedBox(height: 10),
                         CustomTextField(
                           hintText: 'كلمة السر',
-                          controller: PhoneNumber,
-                          ShowIcon: loginController.ShowIcon,
+                          controller: loginController.passwordController,
+                          ShowIcon: loginController.showIcon,
                           visibility: loginController.isPasswordVisible,
                           toggleVisibility:
                               loginController.togglePasswordVisibility,
@@ -123,19 +121,24 @@ class Login extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 15),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Color(0xFFF66890),
-                          ),
-                          height: 48,
-                          child: Center(
-                            child: Text(
-                              'سجل الدخول',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontFamily: 'Inter_18pt',
+                        InkWell(
+                          onTap: () {
+                            loginController.login();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Color(0xFFF66890),
+                            ),
+                            height: 48,
+                            child: Center(
+                              child: Text(
+                                'سجل الدخول',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontFamily: 'Inter_18pt',
+                                ),
                               ),
                             ),
                           ),

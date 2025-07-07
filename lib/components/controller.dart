@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nursery_love_care/page/Login.dart';
+import 'package:nursery_love_care/page/login_view.dart';
 
 class SplashController extends GetxController {
   var currentIndex = 0.obs;
@@ -27,7 +27,7 @@ class SplashController extends GetxController {
         curve: Curves.fastOutSlowIn,
       );
     } else {
-      Get.offAll(Login());
+      Get.offAll(LoginView());
     }
   }
 
