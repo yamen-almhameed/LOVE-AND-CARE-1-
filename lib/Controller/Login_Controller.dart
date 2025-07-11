@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nursery_love_care/Service/auth_service.dart';
-import 'package:nursery_love_care/core/cache/shared_pref_helper.dart';
+import 'package:nursery_love_care/core/shared_pref_helper.dart';
 import 'package:nursery_love_care/main.dart';
 
 class LoginController extends GetxController {
@@ -11,6 +11,7 @@ class LoginController extends GetxController {
   var phoneController = TextEditingController();
   var passwordController = TextEditingController();
   var isLoading = false.obs;
+  var isChecked = false.obs;
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
@@ -29,9 +30,26 @@ class LoginController extends GetxController {
 
     try {
       final response = await AuthService.login(email, password);
-
-      await SharedPrefHelper.setData(StorageKeys.token, response.token);
-
+      LoginRespones loginData = LoginRespones(
+        token: response.token,
+        tokenType: response.tokenType,
+        user: UserModel.fromJson(response.user.toJson()),
+        message: response.message,
+      );
+      print(loginData.toJson());
+      if (isChecked.value) {
+        await SharedPrefHelper.setData(StorageKeys.token, response.token);
+        await SharedPrefHelper.setData(
+          StorageKeys.userName,
+          response.user.name,
+        );
+      } else {
+        await SharedPrefHelper.removeData(StorageKeys.token);
+        await SharedPrefHelper.setData(
+          StorageKeys.userName,
+          response.user.name,
+        );
+      }
       Get.snackbar('تم بنجاح', response.message);
 
       Get.offAllNamed('/HomePage');
@@ -49,7 +67,7 @@ class LoginController extends GetxController {
 
       await SharedPrefHelper.removeData(StorageKeys.token);
 
-      Get.offAllNamed('/login'); 
+      Get.offAllNamed('/login');
     } catch (e) {
       Get.snackbar('خطأ', 'حدث خطأ أثناء تسجيل الخروج');
     } finally {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -104,4 +106,43 @@ class SharedPrefHelper {
       return '';
     }
   }
+  static Future<String?> getStringAsync(String key) async {
+  try {
+    return _prefs?.getString(key);
+  } catch (e) {
+    debugPrint("Error getting string async: $e");
+    return null;
+  }
 }
+
+static Future<int?> getIntAsync(String key) async {
+  try {
+    return _prefs?.getInt(key);
+  } catch (e) {
+    debugPrint("Error getting int async: $e");
+    return null;
+  }
+}
+static Future<void> setMapData(String key, Map<String, dynamic> value) async {
+  try {
+    String jsonString = value.isNotEmpty ? jsonEncode(value) : '';
+    await _prefs?.setString(key, jsonString);
+    debugPrint('SharedPrefHelper: Saved map with key: $key');
+  } catch (e) {
+    debugPrint("Error saving map data: $e");
+  }
+}
+static Future<Map<String, dynamic>?> getMapData(String key) async {
+  try {
+    String? jsonString = _prefs?.getString(key);
+    if (jsonString != null && jsonString.isNotEmpty) {
+      return jsonDecode(jsonString) as Map<String, dynamic>;
+    }
+  } catch (e) {
+    debugPrint("Error getting map data: $e");
+  }
+  return null;
+}
+
+}
+

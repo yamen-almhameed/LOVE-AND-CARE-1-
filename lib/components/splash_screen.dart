@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatelessWidget {
   final String imagePath;
@@ -42,11 +43,10 @@ class SplashScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFFF66890),
-                    fontFamily: 'Poppins',
                   ),
                 ),
                 SizedBox(height: 10),
@@ -57,11 +57,10 @@ class SplashScreen extends StatelessWidget {
                   ),
                   child: Text(
                     description,
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 18,
-                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
-                      height: 1.6, // لزيادة تباعد الأسطر
+                      height: 1.6, 
                     ),
                     textAlign: TextAlign.justify,
                     textDirection: TextDirection.rtl,

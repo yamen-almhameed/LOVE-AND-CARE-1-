@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:nursery_love_care/core/cache/shared_pref_helper.dart';
+import 'package:nursery_love_care/core/shared_pref_helper.dart';
 import 'package:nursery_love_care/main.dart';
 
 class AuthService {
@@ -23,7 +23,7 @@ class AuthService {
   static Future<void> logout() async {
     try {
       var dio = Dio();
-      final token = await SharedPrefHelper.getString(StorageKeys.token);
+      final token = SharedPrefHelper.getString(StorageKeys.token);
 
       final response = await dio.post(
         'https://loveandcarenursery.com/api/auth/logout',
@@ -44,7 +44,6 @@ class AuthService {
     }
   }
 }
-
 
 class LoginRespones {
   final String token;
@@ -81,12 +80,14 @@ class UserModel {
   final String name;
   final String email;
   final String role;
+  final String? imageUrl;
 
   UserModel({
     required this.id,
     required this.name,
     required this.email,
     required this.role,
+    this.imageUrl,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -95,6 +96,7 @@ class UserModel {
       name: json['name'],
       email: json['email'],
       role: json['role'],
+      imageUrl: json['image_url'] ?? '',
     );
   }
 
@@ -103,5 +105,6 @@ class UserModel {
     'name': name,
     'email': email,
     'role': role,
+    'image_url': imageUrl,
   };
 }
