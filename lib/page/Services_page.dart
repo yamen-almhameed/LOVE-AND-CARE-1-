@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nursery_love_care/components/container_service.dart';
 import 'package:nursery_love_care/core/shared_pref_helper.dart';
 import 'package:nursery_love_care/main.dart';
-import 'package:nursery_love_care/page/chat/Chat_Contact_Selector_View.dart';
+import 'package:nursery_love_care/models/ChatService.dart';
+import 'package:nursery_love_care/page/chat/Chat_Contact_User.dart';
+import 'package:nursery_love_care/page/chat/chat_contact_admin.dart';
 
 class ServicesPage extends StatefulWidget {
   const ServicesPage({super.key});
@@ -15,10 +18,13 @@ class ServicesPage extends StatefulWidget {
 
 class _ServicesPageState extends State<ServicesPage> {
   String userName = '';
+  late ChatService chatService;
 
   @override
   void initState() {
     super.initState();
+    chatService = Get.find<ChatService>();
+
     _loadUserData();
   }
 
@@ -108,7 +114,13 @@ class _ServicesPageState extends State<ServicesPage> {
                       image: 'assets/Image/image 8.png',
                     ),
                     onTap: () {
-                      Get.to(ChatContactSelectorView());
+                      Get.to(() {
+                        if (chatService.currentUser?.role == 'parent') {
+                          return ChatContactSelectorView();
+                        } else {
+                          return ChatContactSelectorViewAdmin();
+                        }
+                      });
                     },
                   ),
                   ContainerService(

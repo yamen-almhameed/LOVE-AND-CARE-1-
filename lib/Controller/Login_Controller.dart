@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nursery_love_care/Service/auth_service.dart';
@@ -30,10 +32,12 @@ class LoginController extends GetxController {
 
     try {
       final response = await AuthService.login(email, password);
+      UserModel user = UserModel.fromJson(response.user.toJson());
+
       LoginRespones loginData = LoginRespones(
         token: response.token,
         tokenType: response.tokenType,
-        user: UserModel.fromJson(response.user.toJson()),
+        user: user,
         message: response.message,
       );
       print(loginData.toJson());
@@ -51,8 +55,12 @@ class LoginController extends GetxController {
         );
       }
       Get.snackbar('تم بنجاح', response.message);
-
-      Get.offAllNamed('/HomePage');
+      log('${user.role.toString()}');
+      if (user.role == "parent") {
+        Get.offAllNamed('/HomePage');
+      } else {
+        Get.offAllNamed('/ServicesPage');
+      }
     } catch (e) {
       Get.snackbar('فشل الدخول', 'تأكد من صحة البيانات أو جرب مرة أخرى');
     } finally {
